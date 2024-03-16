@@ -1,0 +1,38 @@
+version: "3"
+networks:
+    layer:
+      driver: bridge
+services:
+    data-mysql:
+      container_name: data-mysql
+      image: mysql:latest
+      restart: always
+      environment:
+        MYSQL_DATABASE: 'MySQL'
+        MYSQL_USER: 'user'
+        MYSQL_PASSWORD: 'password'
+        MYSQL_ROOT_PASSWORD: 'password'
+      ports:
+        - '3306:3306'
+      expose:
+        - '3306'
+      volumes:
+        - ./MySQL/10000:/docker-entrypoint-initdb.d
+      networks:
+        layer:
+    app-python:
+      container_name: "app-python"
+      build:
+        context: ./Python
+        # dockerfile: ./PythonDockerfile
+      restart:
+            "always"
+      ports:
+        - "5000:5000"
+      environment:
+        FLASK_APP: performance.py
+      command: flask run --host=0.0.0.0
+      networks:
+        layer:
+
+    
