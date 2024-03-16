@@ -1,0 +1,118 @@
+I have a database with four tables:
+
+DROP TABLE IF EXISTS `Supplier`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Supplier` (
+  `id` int(11) NOT NULL,
+  `supplier_name` varchar(255) NOT NULL,
+  `contact_person` varchar(100) DEFAULT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `Product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Product` (
+  `id` int(11) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `category` varchar(50) DEFAULT NULL,
+  `quantity_in_stock` int(11) DEFAULT NULL,
+  `unit_price` decimal(10,2) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `supplier_id` (`supplier_id`),
+  CONSTRAINT `Product_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `Supplier` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `Employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Employee` (
+  `id` int(11) NOT NULL,
+  `employee_name` varchar(255) NOT NULL,
+  `department` varchar(100) DEFAULT NULL,
+  `job_title` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `Transaction`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Transaction` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `transaction_type` enum('Inbound','Outbound') NOT NULL,
+  `quantity` int(11) DEFAULT NULL
+
+
+
+  ####################################
+
+
+
+  I also have a flask application:
+
+from flask import Flask, render_template
+import mysql.connector
+
+app = Flask(__name__)
+
+def create_connection(host_name, user_name, user_password, db_name, port):
+    try:
+        connection = mysql.connector.connect(
+            host=host_name,
+            user=user_name,
+            passwd=user_password,
+            database=db_name,
+            port=port
+        )
+        print("Connection to MySQL DB successful")
+        return connection
+    except Exception as e:
+        print(f"The error '{e}' occurred")
+        raise
+
+def select_all_employees(connection):
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Employee")
+        rows = cursor.fetchall()
+        return rows
+    except Exception as e:
+        print(f"The error '{e}' occurred")
+        raise
+    finally:
+        cursor.close()
+
+@app.route('/select-mysql')
+def select_mysql():
+    custom_port = 3306
+    connection = create_connection("data-mysql", "user", "password", "MySQL", custom_port)
+    if connection:
+        employees = select_all_employees(connection)
+        connection.close()
+        return render_template('index.html', employees=employees)
+    else:
+        return "Failed to establish connection to the database."
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
+
+###########################
+
+
+I need a function that queries a SELECT (with JOIN) / Aggregation Logic
+
+Can you create one for me and also provide a new route: @app,route('/aggregation-mysql')`?
+
+
+##############################
+
+Great! I want the same function, but instead Python does the aggregation.
