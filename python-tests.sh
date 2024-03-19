@@ -40,6 +40,14 @@ test_mysql "MySQL" "Python" "python-mysql-data-aggre-1" "http://127.0.0.1:5000/a
 test_mysql "MySQL" "Python" "python-mysql-app-aggre-1" "http://127.0.0.1:5000/aggregation-python" "$file"
 test_mysql "MySQL" "Python" "python-mysql-data-filter-1" "http://127.0.0.1:5000/filter-mysql" "$file"
 test_mysql "MySQL" "Python" "python-mysql-app-filter-1" "http://127.0.0.1:5000/filter-python" "$file"
+test_mysql "MySQL" "Python" "python-mysql-data-sort-1" "http://127.0.0.1:5000/sorting-mysql" "$file"
+test_mysql "MySQL" "Python" "python-mysql-app-sort-1" "http://127.0.0.1:5000/sorting-python" "$file"
+test_mysql "MySQL" "Python" "python-mysql-data-procedure-1" "http://127.0.0.1:5000/procedure-mysql" "$file"
+test_mysql "MySQL" "Python" "python-mysql-app-procedure-1" "http://127.0.0.1:5000/procedure-python" "$file"
+test_mysql "MySQL" "Python" "python-mysql-data-adprocedure-1" "http://127.0.0.1:5000/advanced-procedure-mysql" "$file"
+test_mysql "MySQL" "Python" "python-mysql-app-adprocedure-1" "http://127.0.0.1:5000/advanced-procedure-python" "$file"
+
+
 
 docker compose down app-python
 docker compose down data-mysql

@@ -35,16 +35,11 @@ def get_total_quantity_per_supplier(connection):
 def select_filtered_employees(connection):
     try:
         cursor = connection.cursor()
-        # Modify the SQL query to include the desired filter (e.g., keeping rows with max B value)
+        # Modify the SQL query to include the desired filter
         query = """
-            SELECT e.*
-            FROM Employee e
-            JOIN (
-                SELECT A, MAX(B) AS max_B
-                FROM Employee
-                GROUP BY A
-            ) max_values
-            ON e.A = max_values.A AND e.B = max_values.max_B
+            SELECT *
+            FROM Employee
+            WHERE department = 'Shipping and Receiving'  -- Example filter: Keep only employees in the Sales department
         """
         cursor.execute(query)
         rows = cursor.fetchall()
@@ -54,3 +49,19 @@ def select_filtered_employees(connection):
         raise
     finally:
         cursor.close()
+
+# ORDER BY / sort
+
+def select_and_sort_employees(connection, sort_column="employee_name"):
+    try:
+        cursor = connection.cursor()
+        query = f"SELECT * FROM Employee ORDER BY {sort_column}"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        return rows
+    except Exception as e:
+        print(f"The error '{e}' occurred")
+        raise
+    finally:
+        cursor.close()
+

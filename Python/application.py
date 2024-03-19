@@ -29,3 +29,10 @@ def filter_grouped_data(group):
     # Assuming you want to keep rows where 'B' is equal to the maximum value of 'B' within each group
     max_b_value = group['B'].max()
     return group[group['B'] == max_b_value]
+
+# ORDER BY / sort
+
+def sort_employees_by_name(employees):
+    # Sort employees by name (Python-based sorting)
+    return sorted(employees, key=lambda emp: emp[1])  # Assuming employee name is in the second column
+
