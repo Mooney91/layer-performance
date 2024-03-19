@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `Transaction`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Transaction` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) DEFAULT NULL,
   `transaction_type` enum('Inbound','Outbound') NOT NULL,
   `quantity` int(11) DEFAULT NULL,
