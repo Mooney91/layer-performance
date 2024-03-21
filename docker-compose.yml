@@ -6,6 +6,7 @@ services:
     data-mysql:
       container_name: data-mysql
       image: mysql:latest
+      command: --default-authentication-plugin=mysql_native_password
       restart: always
       environment:
         MYSQL_DATABASE: 'MySQL'
@@ -34,5 +35,23 @@ services:
       command: flask run --host=0.0.0.0
       networks:
         layer:
-
-    
+    app-javascript:
+      container_name: "app-javascript"
+      build:
+        context: ./JavaScript
+        # dockerfile: ./server/Dockerfile
+      ports:
+          - "1337:1337"
+      expose:
+          - "1337"
+      networks:
+          layer:
+      environment:
+        MYSQL_DATABASE: 'MySQL'
+        MYSQL_USER: 'user'
+        MYSQL_PASSWORD: 'password'
+        MYSQL_ROOT_PASSWORD: 'password'
+      depends_on:
+        - data-mysql
+      restart:
+          "always"
