@@ -1,9 +1,16 @@
-FROM php:8.2-cli
+# Use the official PHP image
+FROM php:7.4-apache
 
-RUN docker-php-ext-install mysqli
+# Install mysqli extension
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
-COPY . /usr/src/myapp
+# Copy the PHP script into the container
+COPY . /var/www/html/
+COPY index.html /usr/local/apache2/htdocs/index.html
 
-WORKDIR /usr/src/myapp
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-CMD [ "php", "performance.php" ]
+RUN a2enmod rewrite
+
+# Restart Apache
+CMD ["apache2ctl", "-D", "FOREGROUND"]

@@ -55,3 +55,15 @@ services:
         - data-mysql
       restart:
           "always"
+    app-php:
+      build:
+        context: ./PHP
+      ports:
+        - 1338:80
+        - 443:443
+      networks:
+          layer:
+      depends_on:
+        - data-mysql
+      restart:
+          "always"

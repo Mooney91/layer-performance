@@ -29,4 +29,22 @@ echo -e "Countdown complete!\n"
 # Test JavaScript (Node.js)
 ./javascript-tests.sh
 
+countdown_seconds=20
+
+echo "Waiting for new tests for $countdown_seconds seconds..."
+
+while [ $countdown_seconds -gt 0 ]; do
+    echo "$countdown_seconds seconds remaining..."
+    sleep 1
+    ((countdown_seconds--))
+done
+
+echo -e "Countdown complete!\n"
+
+# Test JavaScript (Node.js)
+./php-tests.sh
+
+
+
+
 docker compose down --rmi
