@@ -12,7 +12,6 @@ mysql -u user -p
 - Scrutinizer for multiple languages
 - CI
 
-- php
 - Multiple datasets
 - PostgreSQL
 - SQLite
