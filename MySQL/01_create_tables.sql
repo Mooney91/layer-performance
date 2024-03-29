@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS `Product`;
 DROP TABLE IF EXISTS `Supplier`;
 
 CREATE TABLE IF NOT EXISTS `Supplier` (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     supplier_name VARCHAR(255) NOT NULL,
     contact_person VARCHAR(100),
     phone_number VARCHAR(20),
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `Supplier` (
 );
 
 CREATE TABLE IF NOT EXISTS `Product` (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     product_name VARCHAR(255) NOT NULL,
     category VARCHAR(50),
     quantity_in_stock INT,
@@ -22,14 +22,14 @@ CREATE TABLE IF NOT EXISTS `Product` (
 );
 
 CREATE TABLE IF NOT EXISTS `Employee` (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     employee_name VARCHAR(255) NOT NULL,
     department VARCHAR(100),
     job_title VARCHAR(100)
 );
 
 CREATE TABLE IF NOT EXISTS `Transaction` (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT,
     transaction_type ENUM('Inbound', 'Outbound') NOT NULL,
     quantity INT,

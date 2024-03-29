@@ -3,10 +3,15 @@
 # Testing PHP
 echo -e "\nPHP will now be tested.\n"
 
-docker compose up data-mysql --force-recreate --detach --wait
-docker compose up app-php --force-recreate --detach --wait
+datasets=(
+    ./MySQL/10000
+    ./MySQL/50000
+    ./MySQL/100000
+)
 
-sleep 20
+count=1
+
+file="results.csv"
 
 function test_mysql() {  
     for i in {1..10}
@@ -36,38 +41,48 @@ function test_mysql() {
     done
 }
 
-file="results.csv"
+for dataset in "${datasets[@]}"; do
 
-echo -e "Testing: php-mysql-data-aggre-1"
-test_mysql "MySQL" "php" "php-mysql-data-aggre-1" "http://127.0.0.1:1338/aggregation-mysql" "$file"
+    export MYSQL_DATASET=$dataset
 
-echo -e "Testing: php-mysql-app-aggre-1"
-test_mysql "MySQL" "php" "php-mysql-app-aggre-1" "http://127.0.0.1:1338/aggregation-php" "$file"
+    docker compose up data-mysql --force-recreate --detach --wait
+    docker compose up app-php --force-recreate --detach --wait
 
-echo -e "Testing: php-mysql-data-filter-1"
-test_mysql "MySQL" "php" "php-mysql-data-filter-1" "http://127.0.0.1:1338/filter-mysql" "$file"
+    sleep 20
 
-echo -e "php-mysql-app-filter-1"
-test_mysql "MySQL" "php" "php-mysql-app-filter-1" "http://127.0.0.1:1338/filter-php" "$file"
+    echo -e "Testing: php-mysql-data-aggre-$count"
+    test_mysql "MySQL" "php" "php-mysql-data-aggre-$count" "http://127.0.0.1:1338/aggregation-mysql" "$file"
 
-echo -e "Testing: php-mysql-data-sort-1"
-test_mysql "MySQL" "php" "php-mysql-data-sort-1" "http://127.0.0.1:1338/sorting-mysql" "$file"
+    echo -e "Testing: php-mysql-app-aggre-$count"
+    test_mysql "MySQL" "php" "php-mysql-app-aggre-$count" "http://127.0.0.1:1338/aggregation-php" "$file"
 
-echo -e "Testing: php-mysql-app-sort-1"
-test_mysql "MySQL" "php" "php-mysql-app-sort-1" "http://127.0.0.1:1338/sorting-php" "$file"
+    echo -e "Testing: php-mysql-data-filter-$count"
+    test_mysql "MySQL" "php" "php-mysql-data-filter-$count" "http://127.0.0.1:1338/filter-mysql" "$file"
 
-echo -e "Testing: php-mysql-data-procedure-1"
-test_mysql "MySQL" "php" "php-mysql-data-procedure-1" "http://127.0.0.1:1338/procedure-mysql" "$file"
+    echo -e "php-mysql-app-filter-$count"
+    test_mysql "MySQL" "php" "php-mysql-app-filter-$count" "http://127.0.0.1:1338/filter-php" "$file"
 
-echo -e "Testing: php-mysql-app-procedure-1"
-test_mysql "MySQL" "php" "php-mysql-app-procedure-1" "http://127.0.0.1:1338/procedure-php" "$file"
+    echo -e "Testing: php-mysql-data-sort-$count"
+    test_mysql "MySQL" "php" "php-mysql-data-sort-$count" "http://127.0.0.1:1338/sorting-mysql" "$file"
 
-echo -e "Testing: php-mysql-data-adprocedure-1"
-test_mysql "MySQL" "php" "php-mysql-data-adprocedure-1" "http://127.0.0.1:1338/advanced-procedure-mysql" "$file"
+    echo -e "Testing: php-mysql-app-sort-$count"
+    test_mysql "MySQL" "php" "php-mysql-app-sort-$count" "http://127.0.0.1:1338/sorting-php" "$file"
 
-echo -e "Testing: php-mysql-app-adprocedure-1"
-test_mysql "MySQL" "php" "php-mysql-app-adprocedure-1" "http://127.0.0.1:1338/advanced-procedure-php" "$file"
+    echo -e "Testing: php-mysql-data-procedure-$count"
+    test_mysql "MySQL" "php" "php-mysql-data-procedure-$count" "http://127.0.0.1:1338/procedure-mysql" "$file"
 
-docker compose down app-php
-docker compose down data-mysql
-docker compose down --rmi
+    echo -e "Testing: php-mysql-app-procedure-$count"
+    test_mysql "MySQL" "php" "php-mysql-app-procedure-$count" "http://127.0.0.1:1338/procedure-php" "$file"
+
+    echo -e "Testing: php-mysql-data-adprocedure-$count"
+    test_mysql "MySQL" "php" "php-mysql-data-adprocedure-$count" "http://127.0.0.1:1338/advanced-procedure-mysql" "$file"
+
+    echo -e "Testing: php-mysql-app-adprocedure-$count"
+    test_mysql "MySQL" "php" "php-mysql-app-adprocedure-$count" "http://127.0.0.1:1338/advanced-procedure-php" "$file"
+
+    docker compose down app-php
+    docker compose down data-mysql
+    docker compose down --rmi
+
+    ((count++))  
+done

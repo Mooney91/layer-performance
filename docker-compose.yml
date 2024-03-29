@@ -18,7 +18,9 @@ services:
       expose:
         - '3306'
       volumes:
-        - ./MySQL/10000:/docker-entrypoint-initdb.d
+        # - ${MYSQL_DATASET}:/docker-entrypoint-initdb.d
+        - ./MySQL:/docker-entrypoint-initdb.d
+        - ${MYSQL_DATASET}:/var/lib/mysql-files/
       networks:
         layer:
     app-python:

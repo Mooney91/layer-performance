@@ -3,10 +3,15 @@
 # Testing JavaScript (Node.js)
 echo -e "\nJavaScript (Node.js) will now be tested.\n"
 
-docker compose up data-mysql --force-recreate --detach --wait
-docker compose up app-javascript --force-recreate --detach --wait
+datasets=(
+    ./MySQL/10000
+    ./MySQL/50000
+    ./MySQL/100000
+)
 
-sleep 20
+count=1
+
+file="results.csv"
 
 function test_mysql() {  
     for i in {1..10}
@@ -36,38 +41,48 @@ function test_mysql() {
     done
 }
 
-file="results.csv"
+for dataset in "${datasets[@]}"; do
 
-techo -e "Testing: javascript-mysql-data-aggre-1"
-test_mysql "MySQL" "javascript" "javascript-mysql-data-aggre-1" "http://127.0.0.1:1337/aggregation-mysql" "$file"
+    export MYSQL_DATASET=$dataset
 
-echo -e "Testing: javascript-mysql-app-aggre-1"
-test_mysql "MySQL" "javascript" "javascript-mysql-app-aggre-1" "http://127.0.0.1:1337/aggregation-javascript" "$file"
+    docker compose up data-mysql --force-recreate --detach --wait
+    docker compose up app-javascript --force-recreate --detach --wait
 
-echo -e "Testing: javascript-mysql-data-filter-1"
-test_mysql "MySQL" "javascript" "javascript-mysql-data-filter-1" "http://127.0.0.1:1337/filter-mysql" "$file"
+    sleep 20
 
-echo -e "javascript-mysql-app-filter-1"
-test_mysql "MySQL" "javascript" "javascript-mysql-app-filter-1" "http://127.0.0.1:1337/filter-javascript" "$file"
+    techo -e "Testing: javascript-mysql-data-aggre-$count"
+    test_mysql "MySQL" "javascript" "javascript-mysql-data-aggre-$count" "http://127.0.0.1:1337/aggregation-mysql" "$file"
 
-echo -e "Testing: javascript-mysql-data-sort-1"
-test_mysql "MySQL" "javascript" "javascript-mysql-data-sort-1" "http://127.0.0.1:1337/sorting-mysql" "$file"
+    echo -e "Testing: javascript-mysql-app-aggre-$count"
+    test_mysql "MySQL" "javascript" "javascript-mysql-app-aggre-$count" "http://127.0.0.1:1337/aggregation-javascript" "$file"
 
-echo -e "Testing: javascript-mysql-app-sort-1"
-test_mysql "MySQL" "javascript" "javascript-mysql-app-sort-1" "http://127.0.0.1:1337/sorting-javascript" "$file"
+    echo -e "Testing: javascript-mysql-data-filter-$count"
+    test_mysql "MySQL" "javascript" "javascript-mysql-data-filter-$count" "http://127.0.0.1:1337/filter-mysql" "$file"
 
-echo -e "Testing: javascript-mysql-data-procedure-1"
-test_mysql "MySQL" "javascript" "javascript-mysql-data-procedure-1" "http://127.0.0.1:1337/procedure-mysql" "$file"
+    echo -e "javascript-mysql-app-filter-$count"
+    test_mysql "MySQL" "javascript" "javascript-mysql-app-filter-$count" "http://127.0.0.1:1337/filter-javascript" "$file"
 
-echo -e "Testing: javascript-mysql-app-procedure-1"
-test_mysql "MySQL" "javascript" "javascript-mysql-app-procedure-1" "http://127.0.0.1:1337/procedure-javascript" "$file"
+    echo -e "Testing: javascript-mysql-data-sort-$count"
+    test_mysql "MySQL" "javascript" "javascript-mysql-data-sort-$count" "http://127.0.0.1:1337/sorting-mysql" "$file"
 
-echo -e "Testing: javascript-mysql-data-adprocedure-1"
-test_mysql "MySQL" "javascript" "javascript-mysql-data-adprocedure-1" "http://127.0.0.1:1337/advanced-procedure-mysql" "$file"
+    echo -e "Testing: javascript-mysql-app-sort-$count"
+    test_mysql "MySQL" "javascript" "javascript-mysql-app-sort-$count" "http://127.0.0.1:1337/sorting-javascript" "$file"
 
-echo -e "Testing: javascript-mysql-app-adprocedure-1"
-test_mysql "MySQL" "javascript" "javascript-mysql-app-adprocedure-1" "http://127.0.0.1:1337/advanced-procedure-javascript" "$file"
+    echo -e "Testing: javascript-mysql-data-procedure-$count"
+    test_mysql "MySQL" "javascript" "javascript-mysql-data-procedure-$count" "http://127.0.0.1:1337/procedure-mysql" "$file"
 
-docker compose down app-javascript
-docker compose down data-mysql
-docker compose down --rmi
+    echo -e "Testing: javascript-mysql-app-procedure-$count"
+    test_mysql "MySQL" "javascript" "javascript-mysql-app-procedure-$count" "http://127.0.0.1:1337/procedure-javascript" "$file"
+
+    echo -e "Testing: javascript-mysql-data-adprocedure-$count"
+    test_mysql "MySQL" "javascript" "javascript-mysql-data-adprocedure-$count" "http://127.0.0.1:1337/advanced-procedure-mysql" "$file"
+
+    echo -e "Testing: javascript-mysql-app-adprocedure-$count"
+    test_mysql "MySQL" "javascript" "javascript-mysql-app-adprocedure-$count" "http://127.0.0.1:1337/advanced-procedure-javascript" "$file"
+
+    docker compose down app-javascript
+    docker compose down data-mysql
+    docker compose down --rmi
+
+    ((count++))  
+done
