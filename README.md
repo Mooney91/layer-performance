@@ -21,3 +21,8 @@ In bash you can also indicate the environmental variable by executing `export MY
 - Python
 - PHP
 
+## Running the Tests
+
+The test suite uses Docker, so please ensure that *Docker Desktop* is up and running before you begin.
+
+Then execute `./performance.sh`
