@@ -14,7 +14,7 @@ count=1
 file="results.csv"
 
 function test_mysql() {  
-    for i in {1..10}
+    for i in {1..100}
     do
         echo -e "Round: ${i}"
         # docker compose up data-mysql --force-recreate --detach --wait
